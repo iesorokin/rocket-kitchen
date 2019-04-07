@@ -1,7 +1,8 @@
-package ru.rocket.kitchen
+package ru.rocket.kitchen.activities
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import ru.rocket.kitchen.R
 
 class MainActivity : AppCompatActivity() {
 
