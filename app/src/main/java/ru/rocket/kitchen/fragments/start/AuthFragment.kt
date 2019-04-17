@@ -4,6 +4,7 @@ package ru.rocket.kitchen.fragments.start
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
@@ -19,13 +20,16 @@ import android.widget.RadioGroup
 import android.widget.Toast
 import ru.rocket.kitchen.R
 import ru.rocket.kitchen.activities.MainActivity
-import ru.rocket.kitchen.model.TypeKitchen
+import ru.rocket.kitchen.constants.SHARED_USER_DATA
+import ru.rocket.kitchen.constants.TYPE_KITCHEN
+import ru.rocket.kitchen.domain.TypeKitchen
+import java.lang.Thread.sleep
 
 class AuthFragment : Fragment() {
 
     private lateinit var password: EditText
     private lateinit var radioGroup: RadioGroup
-    private lateinit var typeKitchen: TypeKitchen
+    private var typeKitchen: TypeKitchen = TypeKitchen.CANDY
     private lateinit var enterButton: Button
 
     private lateinit var progressDialog: ProgressDialog
@@ -43,7 +47,7 @@ class AuthFragment : Fragment() {
         val v = inflater.inflate(R.layout.fragment_auth, container, false)
 
         password = v.findViewById(R.id.loginPassword)
-        radioGroup = v.findViewById(R.id.loginPassword)
+        radioGroup = v.findViewById(R.id.radioGroupTypeKitchen)
         enterButton = v.findViewById(R.id.logBtn)
         progressDialog = ProgressDialog(activity)
 
@@ -91,27 +95,29 @@ class AuthFragment : Fragment() {
             )
     }
 
-    private inner class DownloadTask : AsyncTask<String, Int, Void>() {
+    private inner class DownloadTask : AsyncTask<String, Int, Void?>() {
 
         override fun onPreExecute() {
             progressDialog.show()
         }
 
         override fun doInBackground(vararg tasks: String): Void? {
+            sleep(1000 * 1)
             isAuth = isAuthUser(tasks[0], tasks[1])
             return null
         }
 
         private fun isAuthUser(typeKitchen: String, password: String): Boolean {
+            sharedTypeKitchen(typeKitchen)
             return true
-            TODO("add shared pref for save data about auth")
+            //todo: huck
         }
 
         override fun onProgressUpdate(vararg values: Int?) {
             progressDialog.progress = values[0]!!
         }
 
-        override fun onPostExecute(result: Void) {
+        override fun onPostExecute(result: Void?) {
             if (!isAuth) {
                 progressDialog.dismiss()
                 Toast.makeText(activity, "Пароль введен неверно", Toast.LENGTH_SHORT).show()
@@ -124,6 +130,14 @@ class AuthFragment : Fragment() {
                 sentToMainActivity()
             }
         }
+    }
+
+    private fun sharedTypeKitchen(typeKitchen: String) {
+        val mSharedPreferences: SharedPreferences =
+            activity!!.getSharedPreferences(SHARED_USER_DATA, Context.MODE_PRIVATE)
+        val editor = mSharedPreferences.edit()
+        editor.putString(TYPE_KITCHEN, typeKitchen)
+        editor.apply()
     }
 
     private fun sentToMainActivity() {

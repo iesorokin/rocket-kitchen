@@ -1,4 +1,4 @@
-package ru.rocket.kitchen.model
+package ru.rocket.kitchen.domain
 
 enum class TypeKitchen{
     COLD,
