@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ru.rocket.kitchen.R
+import ru.rocket.kitchen.activities.isReady
 import ru.rocket.kitchen.adapters.EventsListAdapter
 import ru.rocket.kitchen.domain.Order
 import java.lang.Thread.sleep
@@ -18,7 +19,7 @@ import java.lang.Thread.sleep
 class HomeFragment : Fragment() {
 
     // Список события
-    private var mOrderList: List<Order>? = null
+    private var mOrderList: MutableList<Order>? = null
     // Адаптер для вывода списка событий
     private var mRecyclerView: RecyclerView? = null
     private var mEventsListAdapter: EventsListAdapter? = null
@@ -49,57 +50,74 @@ class HomeFragment : Fragment() {
         mRecyclerView!!.layoutManager = llm
 
         // Загрузка событий из базы данных
-        initializeData()
+        initializeData(true)
+        val isR = !isReady
+        if (isR) {
+            initializeData(false)
+        }
         return v
 
     }
 
-    // Загрузка событий из баззы данных
-    private fun initializeData() {
-
-        mMyTask = DownloadTask()
-            .execute()
-
+    private fun addBludo() {
+        mOrderList?.add(
+            order().copy(
+                name = "Салат: Цезарь с курицей",
+                image = "5"
+            )
+        )
     }
 
-    private inner class DownloadTask : AsyncTask<Void?, Int, Void?>() {
+    // Загрузка событий из баззы данных
+    private fun initializeData(a: Boolean) {
+        mMyTask = DownloadTask()
+            .execute(a)
+    }
+
+    private inner class DownloadTask : AsyncTask<Boolean, Int, Void?>() {
 
         // Before the tasks execution
         override fun onPreExecute() {
 
             // Display the progress dialog on async task start
-
-            mProgressDialog!!.show()
+//            if (!THE_MAIN_BUTTON_FOR_VIDEO) {
+//                sleep(3 * 1000)
+//            }
+//            mProgressDialog!!.show()
 
         }
 
         // Do the task in background/non UI thread
-        override fun doInBackground(vararg tasks: Void?): Void? {
-
+        override fun doInBackground(vararg tasks: Boolean?): Void? {
+            if (!tasks[0]!!) {
+                sleep(4 * 1000)
+                addBludo()
+                isReady = true
+            }
             //todo: added rest to back for load all orders
-            mOrderList = listOf(
-                order().copy(
-                    name = "Salat"
-                ),
-                order().copy(
-                    name = "Wine"
-                ),
-                order().copy(
-                    name = "Drink"
-                ),
-                order().copy(
-                    name = "Meat"
-                )
-            ).toMutableList()
+            if (mOrderList == null) {
+                mOrderList = listOf(
+                    order().copy(
+                        name = "Салат: Селедка под шубой",
+                        image = "1"
+                    ),
+                    order().copy(
+                        name = "Мясное ассорти",
+                        image = "2"
+                    ),
+                    order().copy(
+                        name = "Блинчики с форелью",
+                        image = "3"
+                    ),
+                    order().copy(
+                        name = "Холодец",
+                        image = "4"
+                    )
+                ).toMutableList()
 
+            }
             return null
 
-        }
-
-        private fun order(): Order {
-            return Order(
-                name = "Order"
-            )
         }
 
         fun onProgressUpdate(vararg progress: Int) {
@@ -108,14 +126,23 @@ class HomeFragment : Fragment() {
 
         override fun onPostExecute(result: Void?) {
 //            Collections.reverse(mOrderList)\
-            sleep(1 * 1000)
-            mProgressDialog!!.dismiss()
+            /*if (THE_MAIN_BUTTON_FOR_VIDEO){
+                sleep(1 * 1000)
+            }*/
+//            mProgressDialog!!.dismiss()
             mEventsListAdapter = EventsListAdapter(mOrderList)
             mRecyclerView!!.adapter = mEventsListAdapter
-
-
+            if (mRecyclerView!!.getScrollState() != RecyclerView.SCROLL_STATE_DRAGGING) {
+                mRecyclerView!!.scrollToPosition(mOrderList!!.size - 1)
+            }
         }
+    }
 
+    private fun order(): Order {
+        return Order(
+            name = "Order",
+            image = "1"
+        )
     }
 
 }

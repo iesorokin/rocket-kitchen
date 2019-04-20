@@ -16,7 +16,7 @@ import ru.rocket.kitchen.R
 import ru.rocket.kitchen.activities.MainActivity
 import ru.rocket.kitchen.adapters.MessageAdapter
 import ru.rocket.kitchen.domain.Message
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 //todo: add listener
@@ -78,14 +78,15 @@ class ChatFragment : Fragment() {
 
     private fun addMessage(message: String) {
         if (!TextUtils.isEmpty(message)) {
-            val data = LocalDate.now().toEpochDay()
+            val data = LocalDateTime.now()
             mMessagesList?.add(
                 message().copy(
-                    from = "Bacery",
+                    from = "Холодный цех",
                     message = message,
                     date = data
                 )
             )
+            mMessage?.setText("")
             showMessages()
 //            mMainActivity!!.sendData(data)
         }
@@ -97,25 +98,19 @@ class ChatFragment : Fragment() {
         if (mMessagesList == null)
             mMessagesList = listOf(
                 message().copy(
-                    message = "Hello, how are you"
+                    message = "Всем привет, яблоки еще не разгрузили, подходите за ними на склад",
+                    date = LocalDateTime.now().minusHours(1).minusMinutes(23),
+                    from = "Холодный цех"
                 ),
                 message().copy(
-                    message = "Hello, i am fine"
+                    message = "Сегодня мы закрываемся на час позже обычного - пятница =(",
+                    date = LocalDateTime.now().minusHours(1),
+                    from = "Кандитерская"
                 ),
                 message().copy(
-                    message = "What is product"
-                ),
-                message().copy(
-                    message = "I dont know"
-                ),
-                message().copy(
-                    message = "Me too"
-                ),
-                message().copy(
-                    message = "It is ready"
-                ),
-                message().copy(
-                    message = "thank you"
+                    message = "Нужен человек в кандитерскую, заказов много",
+                    date = LocalDateTime.now().minusMinutes(3),
+                    from = "Кандитерская"
                 )
             ).toMutableList()
         activity!!.runOnUiThread {
@@ -137,7 +132,7 @@ class ChatFragment : Fragment() {
 
     private fun message(): Message {
         return Message(
-            date = LocalDate.now().toEpochDay(),
+            date = LocalDateTime.now(),
             from = if (Random().nextBoolean()) "Bacary" else "Candy",
             message = "It is my first message"
         )
@@ -156,12 +151,12 @@ class ChatFragment : Fragment() {
         val mes = data.substring(email.length + timeString.length + 2)
         Log.d("DEBUG", "Get $data")
         if (!mes.isEmpty()) {
-            val message = Message(
+/*            val message = Message(
                 time,
                 email,
                 mes
-            )
-
+            )*/
+/*
             activity!!.runOnUiThread {
                 mMessagesList!!.add(message)
 //                mRecyclerView!!.adapter = mMessageAdapter
@@ -169,7 +164,7 @@ class ChatFragment : Fragment() {
                 if (mRecyclerView!!.scrollState != RecyclerView.SCROLL_STATE_DRAGGING) {
                     mRecyclerView!!.scrollToPosition(mMessagesList!!.size - 1)
                 }
-            }
+            }*/
         }
     }
 

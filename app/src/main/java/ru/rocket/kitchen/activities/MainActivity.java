@@ -1,6 +1,7 @@
 package ru.rocket.kitchen.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -18,7 +19,6 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import ru.rocket.kitchen.R;
 import ru.rocket.kitchen.fragments.main.ChatFragment;
 import ru.rocket.kitchen.fragments.main.HomeFragment;
-import ru.rocket.kitchen.fragments.main.OrderFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static Integer TYPE_SEARCH_ACTIVE = TYPE_SEARCH_TITLE;
     public static String FILTER_OR_TITLE;
 
+    public static Boolean THE_MAIN_BUTTON_FOR_VIDEO = true;
     // Для разрешения
     private static final int PERMISSION_REQUEST_CODE = 1;
     // Для перехода по фрагментам
@@ -58,14 +59,20 @@ public class MainActivity extends AppCompatActivity {
                 changeTitle("Главная");
                 break;
 
+/*
             case R.id.navigation_current_order:
 
                 changeFragment(new OrderFragment());
                 changeTitle("Заказ");
                 break;
+*/
 
             case R.id.navigation_chat:
 
+                changeFragment(new ChatFragment());
+                changeTitle("Чат");
+                break;
+            default:
                 changeFragment(new ChatFragment());
                 changeTitle("Чат");
                 break;
@@ -115,10 +122,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Переход к настройкам
         mSettingsBtn.setOnClickListener(v -> {
-
-//            changeFragment(new SettingsFragment());
-            changeTitle("Настройки");
-
+            Intent intent = new Intent(this, StartActivity.class);
+            startActivity(intent);
+            finish();
         });
 
 
@@ -129,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-//        bnve.enableAnimation(true);
+        //   bnve.enableAnimation(true);
 //        bnve.enableShiftingMode(false);
 //        bnve.enableItemShiftingMode(false);
 
@@ -180,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static Resources getResourseForDraw(){
+    public static Resources getResourseForDraw() {
         return instanse.getResources();
     }
 

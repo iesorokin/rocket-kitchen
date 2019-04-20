@@ -7,10 +7,6 @@
             android:icon="@drawable/ic_home"
             tools:ignore="MenuTitle"/>
 
-    <item
-            android:id="@+id/navigation_current_order"
-            android:icon="@drawable/ic_dashboard_black_24dp"
-            tools:ignore="MenuTitle"/>
 
     <item
             android:id="@+id/navigation_chat"

@@ -20,7 +20,6 @@ import ru.rocket.kitchen.domain.Order;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.EventViewHolder> {
@@ -36,16 +35,16 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Ev
 
         MyEventListener mEventListener;
         TextView eventTitle;
-        TextView eventDescribe;
-        TextView eventAuthor;
+        //        TextView eventDescribe;
+//        TextView eventAuthor;
         ImageView eventImage;
 
         EventViewHolder(View itemView) {
             super(itemView);
 
             eventTitle = itemView.findViewById(R.id.itemEventTitle);
-            eventDescribe = itemView.findViewById(R.id.itemEventDescribe);
-            eventAuthor = itemView.findViewById(R.id.itemEventAuthor);
+//            eventDescribe = itemView.findViewById(R.id.itemEventDescribe);
+//            eventAuthor = itemView.findViewById(R.id.itemEventAuthor);
             mEventListener = new MyEventListener();
             eventImage = itemView.findViewById(R.id.itemEventImage);
             itemView.setOnClickListener(mEventListener);
@@ -86,31 +85,43 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Ev
     public void onBindViewHolder(@NonNull EventsListAdapter.EventViewHolder holder, int position) {
 
         holder.eventTitle.setText(mEventList.get(position).getName());
-        holder.eventDescribe.setText(mEventList.get(position).getName());
-        holder.eventAuthor.setText(mEventList.get(position).getName());
+//        holder.eventDescribe.setText(mEventList.get(position).getName());
+//        holder.eventAuthor.setText(mEventList.get(position).getName());
         holder.mEventListener.id = mEventList.get(position).getName();
-        Bitmap bitmap = getRandomBitmap();
-        if (bitmap != null)
-            holder.eventImage.setImageBitmap(getRandomBitmap());
+        holder.eventImage.setImageBitmap(getRandomBitmap(mEventList.get(position).getImage()));
 
     }
 
-    private Bitmap getRandomBitmap() {
+    private Bitmap getRandomBitmap(String image) {
         ArrayList<Drawable> drawables = new ArrayList<>();
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_1));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_2));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_3));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_4));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_5));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_6));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_7));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_8));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_9));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_10));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_11));
-        drawables.add(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_12));
-        int nextInt = new Random().nextInt(12);
-        return drawableToBitmap(drawables.get(nextInt));
+        switch (image) {
+            case "1":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_salat_seled));
+            case "2":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_meat_assorti));
+            case "3":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_blini_with_fish));
+            case "4":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_xolodec));
+            case "5":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_salat));
+            case "6":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_6));
+            case "7":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_7));
+            case "8":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_8));
+            case "9":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_9));
+            case "10":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_10));
+            case "11":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_11));
+            case "12":
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_12));
+            default:
+                return drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_1));
+        }
     }
 
     private static Bitmap drawableToBitmap(Drawable drawable) {

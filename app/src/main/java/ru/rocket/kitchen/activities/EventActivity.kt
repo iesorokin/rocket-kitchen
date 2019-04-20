@@ -1,5 +1,7 @@
 package ru.rocket.kitchen.activities
 
+import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -16,7 +18,7 @@ class EventActivity : AppCompatActivity() {
     private var mEventId: String? = null
     // ID в массиве сокетов
     private var mSocketId: Int = 0
-
+    private lateinit var instanse: EventActivity
     private val mFragmentManager: FragmentManager? = null
 
     private val mContainer: Fragment? = null
@@ -31,10 +33,14 @@ class EventActivity : AppCompatActivity() {
         get() = intent.getStringExtra("ID")
 
 
+    fun getResourseForDraw(): Resources {
+        return instanse.resources
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        instanse = this
         setContentView(R.layout.activity_event)
-
 /*
         mEventId = id
         makeEvent(mEventId)
@@ -64,6 +70,8 @@ class EventActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 */
+
+
 
         val fm = supportFragmentManager
         var fragment = fm.findFragmentById(R.id.eventFragmentContainer)
@@ -102,7 +110,6 @@ class EventActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-
     }
 
 /*
@@ -187,23 +194,6 @@ class EventActivity : AppCompatActivity() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        try {
-            sSocketMap[mEventId]!!.close()
-            try {
-                sThreadsFrom[mSocketId].stop()
-
-            } catch (ex: Exception) {
-
-            }
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        //    mThreadTo.stop();
-    }
 
     interface ConnectionListener {
         val commandType: Char

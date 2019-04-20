@@ -2,19 +2,21 @@ package ru.rocket.kitchen.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ru.rocket.kitchen.R;
+import ru.rocket.kitchen.activities.MainActivity;
 import ru.rocket.kitchen.domain.Message;
 
 import java.util.List;
-import java.util.Random;
 
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
@@ -31,13 +33,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public int getItemViewType(int position) {
 
-        return isAuthor(position) ? TYPE_AUTHOR : TYPE_GUEST;
+        return isAuthor(position) ? TYPE_GUEST : TYPE_AUTHOR;
 
     }
 
     private boolean isAuthor(int position) {
-        return true;
-//        return mMessagesList.get(position).getFrom().equals(EventActivity.sEventPreview.getAuthor());
+        return mMessagesList.get(position).getFrom().equals("Холодный цех");
 
     }
 
@@ -45,10 +46,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        view = new Random().nextBoolean() ?
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_author, parent, false) :
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_guest, parent, false);
-/*        switch (viewType) {
+//        view = new Random().nextBoolean() ?
+//                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_author, parent, false) :
+//                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_guest, parent, false);
+        switch (viewType) {
             case TYPE_AUTHOR: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_author, parent, false);
                 break;
@@ -57,7 +58,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_guest, parent, false);
                 break;
             }
-        }*/
+        }
         return new MessageViewHolder(view);
     }
 
@@ -67,8 +68,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 //                + mMessagesList.get(position).getFrom() + "!!!" + (mMessagesList.get(position).getDate() == null ? "NOO" : "NORM"));
         holder.messageText.setText(mMessagesList.get(position).getMessage());
         holder.messageAuthor.setText(mMessagesList.get(position).getFrom());
-        holder.messageDate.setText(DateFormat.format("dd-MM-yyyy (hh:mm:ss)", mMessagesList.get(position).getDate()));
+        holder.messageDate.setText(mMessagesList.get(position).getDate().toString());
 //        User user = Commands.userByEmail(mMessagesList.get(position).getFrom());
+        if (mMessagesList.get(position).getFrom().equals("Холодный цех")) {
+            holder.messageImage.setImageBitmap(drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_salat)));
+        }
+        if (mMessagesList.get(position).getFrom().equals("Кандитерская")) {
+            holder.messageImage.setImageBitmap(drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_cake)));
+        }
 //        holder.messageImage.setImageBitmap(getBitmap(user.getImage()));
     }
 
@@ -89,6 +96,28 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         }
 
+    }
+
+    private static Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if (bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     @Override
