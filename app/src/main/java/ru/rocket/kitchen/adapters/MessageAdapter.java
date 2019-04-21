@@ -73,7 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         if (mMessagesList.get(position).getFrom().equals("Холодный цех")) {
             holder.messageImage.setImageBitmap(drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_salat)));
         }
-        if (mMessagesList.get(position).getFrom().equals("Кандитерская")) {
+        if (mMessagesList.get(position).getFrom().equals("Кондитерская")) {
             holder.messageImage.setImageBitmap(drawableToBitmap(MainActivity.getResourseForDraw().getDrawable(R.drawable.food_cake)));
         }
 //        holder.messageImage.setImageBitmap(getBitmap(user.getImage()));

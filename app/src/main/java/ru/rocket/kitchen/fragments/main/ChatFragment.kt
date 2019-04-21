@@ -105,12 +105,12 @@ class ChatFragment : Fragment() {
                 message().copy(
                     message = "Сегодня мы закрываемся на час позже обычного - пятница =(",
                     date = LocalDateTime.now().minusHours(1),
-                    from = "Кандитерская"
+                    from = "Кондитерская"
                 ),
                 message().copy(
                     message = "Нужен человек в кандитерскую, заказов много",
                     date = LocalDateTime.now().minusMinutes(3),
-                    from = "Кандитерская"
+                    from = "Кондитерская"
                 )
             ).toMutableList()
         activity!!.runOnUiThread {
